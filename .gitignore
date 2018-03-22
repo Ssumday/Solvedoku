@@ -57,3 +57,5 @@ pom.xml.tag
 .gitignore
 
 !README.md
+/out/
+out/
