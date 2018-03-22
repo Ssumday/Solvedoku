@@ -7,7 +7,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
-import java.util.Optional;
 
 public class Driver extends Application{
 
@@ -15,8 +14,6 @@ public class Driver extends Application{
     public static void main(String[] args) {
         launch(args);
     }//end of main
-
-
 
     @Override
     public void start(Stage primaryStage) throws Exception {
