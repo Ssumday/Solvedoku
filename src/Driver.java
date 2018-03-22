@@ -10,7 +10,6 @@ import javafx.stage.Stage;
 
 public class Driver extends Application{
 
-    FileReader image = new FileReader();
     public static void main(String[] args) {
         launch(args);
     }//end of main
