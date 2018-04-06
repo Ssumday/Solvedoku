@@ -57,9 +57,9 @@ public class SudokuAlgorithm {
 		return false;
 	}
 	private boolean isSafe(int r , int c , int n)
-	{
-		return ( !usedInRow(r,c,n) && !usedInCol(r,c,n) ) ;
-	}
+    {
+        return ( !usedInRow(r,c,n) && !usedInCol(r,c,n) && !usedInBox(r,c,n) ) ;
+    }
 	private boolean usedInRow(int r , int c, int n)
     { 
         for(int col=0 ; col<size ; col++ )
@@ -83,6 +83,23 @@ public class SudokuAlgorithm {
             }
         }
         
+        return false;
+    }
+    private boolean usedInBox(int r , int c , int n)
+    {
+        int r_st = r - r%((int)Math.sqrt(size)) ;
+        int c_st = c - c%((int)Math.sqrt(size)) ;
+        
+        for(int i=0 ; i< (int)Math.sqrt(size) ; i++ )
+        {
+            for(int j=0 ; j< (int)Math.sqrt(size) ; j++ )
+            {
+                if( r_st+i != r && c_st+j != c && sudoku[r_st+i][c_st+j] == n )
+                {
+                    return true;
+                }
+            }
+        }
         return false;
     }
 
