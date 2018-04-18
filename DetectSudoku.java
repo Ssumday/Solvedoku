@@ -10,6 +10,7 @@ import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Ordering;
+import com.sun.prism.paint.Color;
 
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
@@ -28,8 +29,9 @@ import static solver.FeautureDetector.CONTAIN_DIGIT_SUB_MATRIX_DENSITY;
 
 public class DetectSudoku {
 	 private Size FOUR_CORNERS = new Size(1, 4);
+	 
+	 Tess4j tess4j = new Tess4j();
 
-	    public DetectDigit detect = new DetectDigit();
 	    public DetectSudoku(){
 	    	
 	    }
@@ -219,8 +221,10 @@ public class DetectSudoku {
 
 
 	    private List<Mat> getCells(Mat m) {
+	    	
 	        int size = m.height() / 9;
-
+	        
+	        //add -5 to the sizes to get rectangle
 	        Size cellSize = new Size(size, size);
 	        List<Mat> cells = Lists.newArrayList();
 	        
@@ -229,20 +233,22 @@ public class DetectSudoku {
 	        for (int row = 0; row < 9; row++) {
 	            for (int col = 0; col < 9; col++) {
 	                Rect rect = new Rect(new Point(col * size, row * size), cellSize);
-
+	                
+	                
 	                Mat digit = new Mat(m, rect).clone();
 	                //displayImage("digit", digit);
-	                
+	        
 	                cells.add(digit);
-	                int num = detect.detect(digit);
-	                list.add(num);
+	                
+	                
+	                if(row == 0 && col==0)
+	                {
+	                	displayImage("digit #0 0", digit);
+	                	//Imgcodecs.imwrite("digit [0][0]", digit);
+	                }
 	            }
 	        }
-	        System.out.println(list.size() + " list conatins ");
-	        for(int i = 0; i < list.size(); i++)
-	        {
-	        	System.out.print(list.get(i) + ", ");
-	        }
+	       
 
 	        return cells;
 	    }
@@ -250,31 +256,43 @@ public class DetectSudoku {
 	    private List<Integer> extractCells(Mat m) {
 	        List<Mat> cells = getCells(m);
 	        List<Optional<Rect>> digitBoxes = Lists.transform(cells, FeautureDetector.GET_DIGIT_BOX_BYTE_SUM);
-
+	       
 	        List<Integer> result = Lists.newArrayList();
 	        List<Mat> cuts = Lists.newArrayList();
 	        /* zip... zip! :'( */
-
+	        
 	        for(int i = 0; i < cells.size(); i++ ) {
 	            Mat cell = cells.get(i);
 	            Optional<Rect> box = digitBoxes.get(i);
-
-	            int d = 0;
+	            
+	            
+	            int value = 0;
 
 	            if (box.isPresent() && FeautureDetector.CONTAIN_DIGIT_SUB_MATRIX_DENSITY.apply(cell)) {
 	                /* cut current cell to the finded box */
 	                Mat cutted = new Mat(cell, box.get()).clone();
-	                
+	                //image all cutted no number seen
 	                Imgproc.rectangle(cell, box.get().tl(), box.get().br(), Scalar.all(255));
 	                cuts.add(cutted);
+	                //displayImage("cutted", cutted);
+	                displayImage("cell ", cell);
+	                Imgcodecs.imwrite("number.jpg",  cells.get(0));
 	                
-	                d = detect.detect(cutted);
+	               // cell = cropImage(cell);
+	                
+	               Mat image = crop(cell);
+	                //crop(cells.get(0));
+	               Imgcodecs.imwrite("digit.jpg", image);
+	               value = tess4j.decode();
+	                
+	                //instead of 
+	                //d = detect.detect(cutted);
 	            }
 
 	            Imgproc.rectangle(cell, new Point(0,0), new Point(100,100), Scalar.all(255));
 
-	            result.add(d);
-	            System.out.println("detected number "+ d);
+	            result.add(value);
+	           
 
 	        }
 	       
@@ -286,10 +304,105 @@ public class DetectSudoku {
 	            m2.push_back(digit.clone());
 	        }
 
-	        Imgcodecs.imwrite("cells_boxed.jpg", m2);
+	        //Imgcodecs.imwrite("cells_boxed.jpg", m2);
 	        System.out.println("writing image");
+	        //Imgcodecs.imwrite("checkdigit.jpg", cells.get(39));
+	     //   crop(cells.get(0));
+	        //check 39, 40, 41, 44, 47, 49, 58, 65, 67, 69, 75, 76, 77
+	        //
 	        return result;
 	    }
+	    public static Mat crop(Mat mat)
+	    {
+	    	Mat image = mat.clone();
+	    	
+	    	
+	    	Mat original = image.clone();
+		      
+		      //*******************
+		      System.out.println("original begin size:" + original.size());
+		      
+		      
+		      
+		      // find the center of the image
+		      double[] centers = {(double)image.width()/2, (double)image.height()/2};
+		      Point image_center = new Point(centers);
+
+		      // finding the contours
+		      ArrayList<MatOfPoint> contours = new ArrayList<MatOfPoint>();
+
+		      Mat hierarchy = new Mat();
+		      Imgproc.findContours(image, contours, hierarchy, Imgproc.RETR_EXTERNAL, Imgproc.CHAIN_APPROX_SIMPLE);
+		      
+		      //System.out.println(hierarchy.size().width);
+		     
+		      //*********************
+		     //System.out.println("hierarchy size:" + hierarchy.size());
+
+		      // Maybe that hierarchy width is the way to solve the empty problem
+		      
+		  /*   if(hierarchy.size().width < 30){
+		    	 System.out.println("0");
+		     }
+		     else {*/
+		    	 // finding best bounding rectangle for a contour whose distance is closer to the image center that other ones
+		         double d_min = Double.MAX_VALUE;      
+		         Rect rect_min = new Rect();
+		         for (MatOfPoint contour : contours) {
+		             Rect rec = Imgproc.boundingRect(contour);
+		             // find the best candidates
+		             if (rec.height > image.height()/2 & rec.width > image.width()/2)            
+		                 continue;
+		             //detects bottom line
+		             Point pt1 = new Point((double)rec.x, (double)rec.y);
+		             //detects center
+		             Point center = new Point(rec.x+(double)(rec.width)/2, rec.y + (double)(rec.height)/2);
+		             double d = Math.sqrt(Math.pow((double)(pt1.x-image_center.x),2) + Math.pow((double)(pt1.y -image_center.y), 2));            
+		             if (d < d_min)
+		             {
+		                 d_min = d;
+		                 rect_min = rec;
+		             }                   
+		         }
+		         
+		         // slicing the image for result region
+		         System.out.println("m cols "+ mat.cols());
+		         //pad is the region that you need from the rect_min
+		         //bigger pad, bigger rectangle that you could get
+		         //pad 6 +20 for rest
+		         int pad = 5;        
+		         rect_min.x = rect_min.x - pad;
+		         rect_min.y = rect_min.y - pad;
+		         System.out.println("mins " + rect_min.x + " " + rect_min.y);
+		         rect_min.width = rect_min.width + 2*pad;
+		         rect_min.height = rect_min.height + 2*pad;
+		         System.out.println("rect mins " + rect_min.width + " " + rect_min.height);
+		         if(rect_min.x <= 0 || rect_min.y <= 0 || rect_min.x + rect_min.width > mat.cols() || rect_min.y + rect_min.height > mat.rows())
+		         {
+		        	 System.out.println("greater ");
+		        	 pad = 6;
+		        	 rect_min.x += 5;
+		        	 rect_min.y += 5;
+		        	 rect_min.width -= 2*5;
+		        	 rect_min.height -= 2*5;
+		        	 int space = mat.cols()/5 + 9;
+		        	 rect_min.x = rect_min.x - pad+space;
+			         rect_min.y = rect_min.y - pad+space;
+			         System.out.println("mins " + rect_min.x + " " + rect_min.y);
+			         rect_min.width = rect_min.width + 2*pad+space;
+			         rect_min.height = rect_min.height + 2*pad+space;
+			         System.out.println("rect mins " + rect_min.width + " " + rect_min.height);
+		        	 
+		         }
+		      
+		         Mat result = original.submat(rect_min);  
+		         displayImage("result",result);
+		         //Imgcodecs.imwrite("fixcheckdigit4.jpg", result);
+		    // }
+		         return result;
+	    	
+	    }
+	   
 	    public static void displayImage(String label, Mat mat)
 	    {
 	    	//show image

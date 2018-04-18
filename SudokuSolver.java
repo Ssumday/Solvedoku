@@ -47,7 +47,7 @@ public class SudokuSolver {
 	        return Lists.newArrayList(result);
 	    }
 
-	    private static Splitter SPACE_SPLITTER =  Splitter.on(CharMatcher.WHITESPACE).trimResults();
+	    private Splitter SPACE_SPLITTER =  Splitter.on(CharMatcher.WHITESPACE).trimResults();
 
 	    private void decodeRow(Board board, List<String> row) {
 	        Integer value = 0;
@@ -55,15 +55,17 @@ public class SudokuSolver {
 	        Integer m_col = 0;
 
 	        for(String atom : row) {
-	            List<String> atoms = (List<String>) SPACE_SPLITTER.split(atom);
-	            String constrain = atoms.get(0);
+	        	String[] atoms = atom.split(" ");
+	            //List<String> atoms = (List<String>) SPACE_SPLITTER.split(atom);
+	            String constrain = atoms[0];
+	            //String constrain = atoms.get(0);
 
 	            if (constrain.equals("ROW")) {
-	                m_row = Integer.valueOf(atoms.get(1));
-	                value = Integer.valueOf(atoms.get(2));
+	                m_row = Integer.valueOf(atoms[1]);
+	                value = Integer.valueOf(atoms[2]);
 
 	            } else if (constrain.equals("COL")) {
-	                m_col = Integer.valueOf(atoms.get(1));
+	                m_col = Integer.valueOf(atoms[1]);
 	            }
 	        }
 
