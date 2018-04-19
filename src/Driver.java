@@ -44,13 +44,31 @@ public class Driver extends Application{
         //button management
         Button button = new Button("TextFile Reader");
         Button button2 = new Button("Quit");
+        Button button3 = new Button("Example 1");
+        Button button4 = new Button("Example 2");
+        Button button5 = new Button("Example 3");
+        Button button6 = new Button("Example 4");
         button.setTranslateY(250);
-        button.setTranslateX(-120);
+        button.setTranslateX(-140);
         button2.setTranslateY(250);
-        button2.setTranslateX(120);
+        button2.setTranslateX(150);
+        button3.setTranslateY(280);
+        button3.setTranslateX(-200);
+        button4.setTranslateY(280);
+        button4.setTranslateX(-80);
+        button5.setTranslateY(280);
+        button5.setTranslateX(80);
+        button6.setTranslateY(280);
+        button6.setTranslateX(200);
+
 
         pane.getChildren().add(button);
         pane.getChildren().add(button2);
+        pane.getChildren().add(button3);
+        pane.getChildren().add(button4);
+        pane.getChildren().add(button5);
+        pane.getChildren().add(button6);
+
 
         button.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
