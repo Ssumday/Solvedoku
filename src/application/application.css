@@ -1,0 +1,36 @@
+
+.root {
+    /* Styles for main application window go here, base color scheme */
+    -fx-background-color: #2c3e50;
+    -fx-text-fill: aliceblue !important;
+}
+
+.textField {
+    -fx-background-color: #34495e;
+    -fx-border-color: #273747;
+    -fx-border-width: 1px;
+    -fx-text-fill: aliceblue;
+    -fx-font-weight: bold;
+    -fx-padding: 5px;
+}
+
+.solved {
+    -fx-background-color: #273747 !important;
+}
+
+.title {
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+    -fx-text-alignment: center;
+    -fx-font-size: 28px;
+}
+
+.button {
+    -fx-background-color: #1D2A36;
+    -fx-font-weight: bold;
+    -fx-text-fill: aliceblue;
+}
+
+.button:hover {
+    -fx-background-color: #121A21;
+}
