@@ -1,0 +1,47 @@
+.root {
+    -fx-padding: 15px ;
+    -fx-background-color: black;
+    -fx-font-size:25;
+	-fx-font-weight: bold;
+}
+
+.cell {
+
+    /* Defines a black border around the standard color -fx-base */
+    -fx-background-color:  red, -fx-base ;
+
+    /* By default draw the base color over the whole region, so no border visible */
+    -fx-background-insets: 0, 0 ;
+
+    -fx-padding: 5px ;
+    -fx-background-color: rgb(64,0,128);
+     -fx-font-weight:bold;
+
+}
+
+.cell:right {
+    -fx-background-insets: 0, 0 1 0 0 ;
+
+}
+
+.cell:bottom {
+    -fx-background-insets: 0, 0 0 1 0 ;
+
+}
+
+.cell:right:bottom {
+    -fx-background-insets: 0, 0 1 1 0 ;
+
+}
+
+.cell .label{
+    -fx-pref-width: 3em ;
+    -fx-pref-height: 3em ;
+	-fx-alignment: CENTER;
+	 -fx-background-color: lightblue;
+	 -fx-font-weight:bold;
+	 -fx-padding:5px;
+	 -fx-effect: innershadow( three-pass-box , rgba(0,0,0,0.7) , 6, 0.0 , 2 , 2 );
+	 -fx-font-family: "sans-serif";
+	
+}
