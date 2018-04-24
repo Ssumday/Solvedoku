@@ -57,5 +57,6 @@ pom.xml.tag
 .gitignore
 
 !README.md
+!SolveDoku SRS.doc
 /out/
 out/
