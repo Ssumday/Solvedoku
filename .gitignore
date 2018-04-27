@@ -60,3 +60,5 @@ pom.xml.tag
 !SolveDoku SRS.doc
 /out/
 out/
+!Presentation .pptx
+!SRSdocument.docx
