@@ -62,3 +62,6 @@ pom.xml.tag
 out/
 !Presentation .pptx
 !SRSdocument.docx
+*.docx
+*.pptx
+
