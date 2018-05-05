@@ -1,0 +1,39 @@
+.borderStyle{
+	-fx-background-color: ghostwhite; 
+	-fx-font-family: "serif";
+	-fx-font-size: 450%;
+}
+.buttonStyle{
+	-fx-font-weight: bold;
+	-fx-background-color: rgb(102,204,255);
+	-fx-font-size:14;
+	-fx-text-fill: white;
+	 -fx-effect: dropshadow(two-pass-box , darkgray, 10, 0.0 , 4, 5);
+	
+}
+.gridStyle{
+	
+}
+.hboxStyle{
+	-fx-background-color: lightskyblue;
+	-fx-font-size: 255%;
+	-fx-border-color: black; 
+}
+.hLabelStyle{
+	-fx-background-color: turquoise;
+	-fx-background-radius: 10%;
+	-fx-font-size: 225%;
+	-fx-font-weight: bold;
+	-fx-text-fill: black;
+	-fx-effect: innershadow( three-pass-box , rgba(0,0,0,0.7) , 6, 0.0 , 2 , 2 );
+	}
+.newLabelStyle{
+	-fx-background-color: white;
+	-fx-text-fill: black;
+}
+.titleStyle {
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+    -fx-text-alignment: center;
+    -fx-font-size: 32px;
+}
